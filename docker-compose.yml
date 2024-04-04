@@ -1,0 +1,30 @@
+#docker run -dp 3000:3000 -v ${pwd}:/app -v /app/node_modules --name nodejs-docker-container nodejs-docker-img
+
+
+version: "3"
+services:
+  nodejs-app:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      mysql:
+        condition: service_healthy  # Wait for MySQL to be healthy
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "4000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "123456"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]  # Healthcheck command
+      timeout: 20s
+      retries: 10
+
+volumes:
+  mysql-data: {}
