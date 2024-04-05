@@ -13,15 +13,16 @@ const data = [
 //     if (error) throw error;
 //     console.log(`${results.affectedRows} rows inserted`);
 // })
-// app.get("/", (req, res) => {
-//     res.send("<h1>Welcome to Node.js</h1>");
-// });
+
+app.get("/", (req, res) => {
+    res.send("<h1>Welcome to Node.js</h1>");
+});
 
 app.get("/", (req, res) => {
     // Execute the SELECT * query
     product_db().query('SELECT * FROM phones', (error, results) => {
         if (error) {
-            res.status(500).json({ error: 'Internal Server Error' });
+            res.status(500).json({ error: error.code });
             return;
         }
 
